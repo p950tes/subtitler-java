@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Subtitle {
 
-    private Path path;
-    private List<SubtitleEntry> entries;
+    private final Path path;
+    private final List<SubtitleEntry> entries;
 
     public Subtitle(Path path, List<SubtitleEntry> entries) {
         this.path = path;
@@ -15,14 +15,8 @@ public class Subtitle {
     public Path getPath() {
         return path;
     }
-    public void setPath(Path path) {
-        this.path = path;
-    }
     public List<SubtitleEntry> getEntries() {
         return entries;
-    }
-    public void setEntries(List<SubtitleEntry> entries) {
-        this.entries = entries;
     }
     @Override
     public String toString() {

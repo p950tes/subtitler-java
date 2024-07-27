@@ -42,6 +42,7 @@ public class EntryScrubber {
         		.toList();
         
         SubtitleEntry newEntry = new SubtitleEntry(entry.getIndex(), entry.getTimestamp(), newLines);
+        newEntry.setModified(! entry.equals(newEntry));
         return newEntry;
     }
     

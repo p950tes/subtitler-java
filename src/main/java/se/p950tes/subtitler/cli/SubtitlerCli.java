@@ -48,7 +48,7 @@ public class SubtitlerCli implements Callable<Integer> {
         	backupSuffix = StringUtils.trimToNull(inPlaceEdit.get());
         }
         
-        SubtitleScrubber scrubber = new SubtitleScrubber(inPlaceEditEnabled, backupSuffix);
+        SubtitleScrubber scrubber = new SubtitleScrubber(inPlaceEditEnabled, backupSuffix, verbose);
         for (Path file : files) {
         	scrubber.processFile(file);
         }

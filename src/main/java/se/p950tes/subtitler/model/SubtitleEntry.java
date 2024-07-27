@@ -8,6 +8,7 @@ public class SubtitleEntry {
     private Integer index;
     private String timestamp;
     private List<String> lines;
+    private boolean modified = false;
 
     public SubtitleEntry(Integer index, String timestamp, List<String> lines) {
         this.index = index;
@@ -40,7 +41,14 @@ public class SubtitleEntry {
     public void setLines(List<String> lines) {
         this.lines = lines;
     }
-    @Override
+    public boolean isModified() {
+		return modified;
+	}
+	public void setModified(boolean modified) {
+		this.modified = modified;
+	}
+
+	@Override
     public String toString() {
         String ret = "Index: " + index + "\n";
         ret += "Timestamp: " + timestamp;

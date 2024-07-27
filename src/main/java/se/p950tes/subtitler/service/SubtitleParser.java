@@ -65,7 +65,6 @@ public class SubtitleParser {
     private void reset() {
         if (currentIndex != null && currentTimestamp != null) {
             var entry = new SubtitleEntry(Integer.parseInt(currentIndex), currentTimestamp, currentContent);
-//            System.out.println("Adding entry: \n" + entry);
             entries.add(entry);
         }
         lastParsed = null;
