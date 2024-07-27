@@ -133,8 +133,8 @@ class EntryScrubberTest {
     @Test
     void manualTest() {
     	SubtitleEntry entry = new SubtitleEntry(9, "00:00:38,038 --> 00:00:40,249", List.of("-FRENCHIE: Who is he?", "-Oh, this here", "is Hughie Campbell."));
-    	scrubber.scrub(entry);
-    	assertEquals(List.of("Who is he?", "-Oh, this here", "is Hughie Campbell."), entry.getLines());
+    	SubtitleEntry newEntry = scrubber.scrub(entry);
+    	assertEquals(List.of("Who is he?", "-Oh, this here", "is Hughie Campbell."), newEntry.getLines());
     }
 
     private EntryTester newTest(String message) {
@@ -161,8 +161,8 @@ class EntryScrubberTest {
     	}
 		void forEntry(String... inputLines) {
 			SubtitleEntry entry = new SubtitleEntry(1, "00:00:16,141 --> 00:00:18,727", List.of(inputLines));
-			scrubber.scrub(entry);
-			assertEquals(expectedLines, entry.getLines(), message);
+			SubtitleEntry newEntry = scrubber.scrub(entry);
+			assertEquals(expectedLines, newEntry.getLines(), message);
 		}
     }
 }

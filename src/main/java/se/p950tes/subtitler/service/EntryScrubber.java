@@ -30,7 +30,7 @@ public class EntryScrubber {
     private static final Pattern VOICE_INDICATORS_PATTERN = Pattern.compile("^[\\- ]*[A-Za-z]{2}[A-Za-z0-9 \']*\\s?: *");
 
     
-    public void scrub(SubtitleEntry entry) {
+    public SubtitleEntry scrub(SubtitleEntry entry) {
         
         String linesAsString = String.join("\n", entry.getLines());
         linesAsString = scrubEntry(linesAsString);
@@ -41,7 +41,8 @@ public class EntryScrubber {
         		.filter(StringUtils::isNotBlank)
         		.toList();
         
-        entry.setLines(newLines);
+        SubtitleEntry newEntry = new SubtitleEntry(entry.getIndex(), entry.getTimestamp(), newLines);
+        return newEntry;
     }
     
     private String scrubEntry(String entry) {

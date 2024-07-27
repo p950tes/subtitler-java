@@ -25,16 +25,14 @@ public class SubtitleScrubber {
 
         SubtitleParser parser = new SubtitleParser();
         Subtitle subtitle = parser.parse(file);
-//        System.out.println("-------BEGIN PARSE-------");
-//        subtitle.getEntries().stream().forEach(System.out::println);
-//        System.out.println("--------END PARSE--------");
 
         EntryScrubber scrubber = new EntryScrubber();
         
-        var entries = subtitle.getEntries();
-        entries.forEach(entry -> scrubber.scrub(entry));
+        var entries = subtitle.getEntries().stream()
+        		.map(scrubber::scrub)
+        		.filter(SubtitleEntry::isNotEmpty)
+        		.toList();
 
-        entries = filterEmptyEntries(entries);
         correctIndexes(entries);
         subtitle.setEntries(entries);
         
@@ -79,12 +77,6 @@ public class SubtitleScrubber {
     		outputStream.println(entry.toFormattedEntry());
     		outputStream.println();
     	}
-    }
-
-	private List<SubtitleEntry> filterEmptyEntries(List<SubtitleEntry> entries) {
-        return entries.stream()
-                .filter(SubtitleEntry::isNotEmpty)
-                .toList();
     }
 
     private void correctIndexes(List<SubtitleEntry> entries) {
