@@ -3,6 +3,9 @@ plugins {
 	id 'application'
     id 'org.graalvm.buildtools.native' version '0.10.2'
 }
+repositories {
+	mavenCentral()
+}
 
 group = 'se.p950tes'
 version = '0.0.1-SNAPSHOT'
@@ -11,12 +14,18 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
 
-repositories {
-	mavenCentral()
-}
-
 application {
 	mainClass = 'se.p950tes.subtitler.SubtitlerApplication'
+}
+jar {
+	duplicatesStrategy = 'warn'
+	manifest.attributes 'Main-Class': application.mainClass
+    
+    from sourceSets.main.output
+    from {
+    	configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.DSA', 'META-INF/*.SF', 'META-INF/versions/*/module-info.class'
 }
 
 dependencies {
@@ -36,4 +45,15 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+graalvmNative {
+	metadataRepository.enabled = true
+	binaries {
+		main {
+			// verbose = true
+			//quickBuild = true // OBS Only during dev
+			sharedLibrary = false
+		}
+	}
 }

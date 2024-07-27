@@ -9,7 +9,7 @@ import picocli.CommandLine.Model.CommandSpec;
 
 class DisableSpaceSeparatorPreprocessor implements IParameterPreprocessor {
 	
-	public DisableSpaceSeparatorPreprocessor() {
+	DisableSpaceSeparatorPreprocessor() {
 		super();
 	}
 	
