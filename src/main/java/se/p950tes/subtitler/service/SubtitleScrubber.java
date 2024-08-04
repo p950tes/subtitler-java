@@ -15,44 +15,44 @@ public class SubtitleScrubber {
 	private final boolean backupOriginalFile;
 	private final boolean verbose;
 	
-    public SubtitleScrubber(FileManager fileManager, boolean inPlaceEdit, boolean backupOriginalFile, boolean verbose) {
-    	this.fileManager = fileManager;
+	public SubtitleScrubber(FileManager fileManager, boolean inPlaceEdit, boolean backupOriginalFile, boolean verbose) {
+		this.fileManager = fileManager;
 		this.inPlaceEdit = inPlaceEdit;
 		this.backupOriginalFile = backupOriginalFile;
 		this.verbose = verbose;
 	}
 
 	public void processFile(Path file) {
-        print("Processing: " + file);
+		print("Processing: " + file);
 
-        SubtitleParser parser = new SubtitleParser(fileManager);
-        SubtitleFile subtitle = parser.parse(file);
+		SubtitleParser parser = new SubtitleParser(fileManager);
+		SubtitleFile subtitle = parser.parse(file);
 
-        EntryScrubber scrubber = new EntryScrubber();
-        
-        var newEntries = subtitle.getEntries().stream()
-        		.map(scrubber::scrub)
-        		.filter(SubtitleEntry::isNotEmpty)
-        		.toList();
+		EntryScrubber scrubber = new EntryScrubber();
+		
+		var newEntries = subtitle.getEntries().stream()
+				.map(scrubber::scrub)
+				.filter(SubtitleEntry::isNotEmpty)
+				.toList();
 
-        correctIndexes(newEntries);
-        
-        if (inPlaceEdit) {
-        	if (backupOriginalFile) {
-        		fileManager.backupInputFile(file);
-        	}
-        	replaceInputFile(file, newEntries);
-        } else {
-        	writeSubtitleContents(newEntries, System.out);
-        }
-        
-        printSummary(subtitle.getEntries(), newEntries);
-    }
+		correctIndexes(newEntries);
+		
+		if (inPlaceEdit) {
+			if (backupOriginalFile) {
+				fileManager.backupInputFile(file);
+			}
+			replaceInputFile(file, newEntries);
+		} else {
+			writeSubtitleContents(newEntries, System.out);
+		}
+		
+		printSummary(subtitle.getEntries(), newEntries);
+	}
 
-    private void printSummary(List<SubtitleEntry> oldEntries, List<SubtitleEntry> newEntries) {
-    	print(" * Entries modified: " + newEntries.stream().filter(SubtitleEntry::isModified).count());
-    	print(" * Entries removed: " + (oldEntries.size() - newEntries.size()));
-    	print(" * Entries remaining: " + newEntries.size());
+	private void printSummary(List<SubtitleEntry> oldEntries, List<SubtitleEntry> newEntries) {
+		print(" * Entries modified: " + newEntries.stream().filter(SubtitleEntry::isModified).count());
+		print(" * Entries removed: " + (oldEntries.size() - newEntries.size()));
+		print(" * Entries remaining: " + newEntries.size());
 	}
 
 	private void replaceInputFile(Path originalPath, List<SubtitleEntry> entries) {
@@ -65,26 +65,26 @@ public class SubtitleScrubber {
 			throw new IllegalStateException("Failed to overwrite original file", e);
 		}
 	}
-    
-    private void writeSubtitleContents(List<SubtitleEntry> entries, PrintStream outputStream) {
-    	for (SubtitleEntry entry : entries) {
-    		outputStream.println(entry.toFormattedEntry());
-    		outputStream.println();
-    	}
-    }
+	
+	private void writeSubtitleContents(List<SubtitleEntry> entries, PrintStream outputStream) {
+		for (SubtitleEntry entry : entries) {
+			outputStream.println(entry.toFormattedEntry());
+			outputStream.println();
+		}
+	}
 
-    private void correctIndexes(List<SubtitleEntry> entries) {
-        for (int i = 0; i < entries.size(); i++) {
-            entries.get(i).setIndex(i + 1);
-        }
-    }
-    
-    private void print(String line) {
-    	System.out.println(line);
-    }
-    private void printVerbose(String line) {
-    	if (verbose) {
-    		print(line);
-    	}
-    }
+	private void correctIndexes(List<SubtitleEntry> entries) {
+		for (int i = 0; i < entries.size(); i++) {
+			entries.get(i).setIndex(i + 1);
+		}
+	}
+	
+	private void print(String line) {
+		System.out.println(line);
+	}
+	private void printVerbose(String line) {
+		if (verbose) {
+			print(line);
+		}
+	}
 }
