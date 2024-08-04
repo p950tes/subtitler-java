@@ -2,6 +2,7 @@ package se.p950tes.subtitler;
 
 import picocli.CommandLine;
 import se.p950tes.subtitler.cli.SubtitlerCli;
+import se.p950tes.subtitler.cli.SubtitlerCliExecutor;
 
 public class SubtitlerApplication {
 
@@ -12,7 +13,9 @@ public class SubtitlerApplication {
 
     
     private int execute(String[] args) {
-    	CommandLine commandLine = new CommandLine(new SubtitlerCli());
+    	SubtitlerCli cli = new SubtitlerCli(new SubtitlerCliExecutor());
+    	
+    	CommandLine commandLine = new CommandLine(cli);
     	return commandLine.execute(args);
     }
 }

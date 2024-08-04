@@ -5,9 +5,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import se.p950tes.subtitler.model.SubtitleEntry;
+import se.p950tes.subtitler.service.model.SubtitleEntry;
 
-public class EntryScrubber {
+class EntryScrubber {
 
     private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
 

@@ -1,14 +1,14 @@
-package se.p950tes.subtitler.model;
+package se.p950tes.subtitler.service.model;
 
 import java.nio.file.Path;
 import java.util.List;
 
-public class Subtitle {
+public class SubtitleFile {
 
     private final Path path;
     private final List<SubtitleEntry> entries;
 
-    public Subtitle(Path path, List<SubtitleEntry> entries) {
+    public SubtitleFile(Path path, List<SubtitleEntry> entries) {
         this.path = path;
         this.entries = entries;
     }

@@ -1,4 +1,4 @@
-package se.p950tes.subtitler.model;
+package se.p950tes.subtitler.service.model;
 
 import java.util.List;
 import java.util.Objects;

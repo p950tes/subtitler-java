@@ -1,6 +1,5 @@
 package se.p950tes.subtitler.cli;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -11,12 +10,13 @@ import org.apache.commons.lang3.StringUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import se.p950tes.subtitler.service.SubtitleScrubber;
 
 @Command(name = "subtitler", 
 		description = "Scrubs HI notations and other junk data from subtitle files")
 public class SubtitlerCli implements Callable<Integer> {
 
+	private final SubtitlerCliExecutor executor;
+	
 	@Option(names = {"-i", "--in-place"}, 
 			description = "Edit files in place. If a suffix parameter is specified then the original file will be kept behind with the specified suffix.", 
 			paramLabel = "backupSuffix", 
@@ -36,36 +36,24 @@ public class SubtitlerCli implements Callable<Integer> {
     		arity = "1..*")
     private List<Path> files;
     
+    public SubtitlerCli(SubtitlerCliExecutor executor) {
+		this.executor = executor;
+	}
+    
     @Override
     public Integer call() {
-        if (! validateFiles()) {
-            return -1;
-        }
-        
-        boolean inPlaceEditEnabled = inPlaceEdit.isPresent();
-        String backupSuffix = null;
-        if (inPlaceEditEnabled) {
-        	backupSuffix = StringUtils.trimToNull(inPlaceEdit.get());
-        }
-        
-        SubtitleScrubber scrubber = new SubtitleScrubber(inPlaceEditEnabled, backupSuffix, verbose);
-        for (Path file : files) {
-        	scrubber.processFile(file);
-        }
-        return 0;
+    	executor.setFiles(files);
+    	executor.setInPlaceEditEnabled(inPlaceEdit.isPresent());
+    	executor.setBackupSuffix(resolveBackupFileSuffix(inPlaceEdit));
+    	executor.setVerbose(verbose);
+    	return executor.execute();
     }
-
-    private boolean validateFiles() {
-        for (Path file : files) {
-            if ((! Files.exists(file)) || (! Files.isRegularFile(file))) {
-                System.err.println("File does not exist: " + file.toAbsolutePath());
-                return false;
-            }
-            if ((! Files.isReadable(file)) || (! Files.isWritable(file))) {
-                System.err.println("File is not accessible: " + file.toAbsolutePath());
-                return false;
-            }
-        }
-        return true;
+    
+    private static Optional<String> resolveBackupFileSuffix(Optional<String> inPlaceEdit) {
+    	if (inPlaceEdit.isEmpty()) {
+    		return Optional.empty();
+    	}
+    	String backupSuffix = StringUtils.trimToNull(inPlaceEdit.get());
+    	return Optional.ofNullable(backupSuffix);
     }
 }

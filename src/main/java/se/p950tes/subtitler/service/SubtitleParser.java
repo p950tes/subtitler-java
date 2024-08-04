@@ -1,16 +1,15 @@
 package se.p950tes.subtitler.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import se.p950tes.subtitler.model.Subtitle;
-import se.p950tes.subtitler.model.SubtitleEntry;
+import se.p950tes.subtitler.service.model.SubtitleEntry;
+import se.p950tes.subtitler.service.model.SubtitleFile;
+import se.p950tes.subtitler.util.FileManager;
 
-public class SubtitleParser {
+class SubtitleParser {
 
     private static final Pattern INDEX_PATTERN = Pattern.compile("^\\d+$");
     private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("^[\\d:,]+\\s+" + Pattern.quote("-->") + "\\s+[\\d:,]+$");
@@ -20,15 +19,20 @@ public class SubtitleParser {
     }
 
     private final List<SubtitleEntry> entries = new ArrayList<>();
+    private final FileManager fileManager;
 
     private String currentIndex;
     private String currentTimestamp;
     private List<String> currentContent = new ArrayList<>();
     private Type lastParsed;
 
-    public Subtitle parse(Path file) {
+    public SubtitleParser(FileManager fileManager) {
+		this.fileManager = fileManager;
+	}
 
-        List<String> lines = readLinesFromFile(file);
+	public SubtitleFile parse(Path file) {
+
+        List<String> lines = fileManager.readLinesFromFile(file);
 
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i).trim();
@@ -59,7 +63,7 @@ public class SubtitleParser {
             reset();
         }
         
-        return new Subtitle(file, entries);
+        return new SubtitleFile(file, entries);
     }
 
     private void reset() {
@@ -77,13 +81,5 @@ public class SubtitleParser {
     }
     private static boolean looksLikeTimestamp(String line) {
         return TIMESTAMP_PATTERN.matcher(line).matches();
-    }
-
-    private List<String> readLinesFromFile(Path file) {
-        try {
-            return Files.readAllLines(file);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read file: " + file, e);
-        }
     }
 }
