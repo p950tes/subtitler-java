@@ -27,7 +27,7 @@ class EntryScrubber {
 	private static final Pattern ALL_CAPS_PATTERN = Pattern.compile("^[A-Z ,\\!]{3,}$");
 	
 	// Names followed by colon: (Guard 1: Hello there)
-	private static final Pattern VOICE_INDICATORS_PATTERN = Pattern.compile("^[\\- ]*[A-Za-z]{2}[A-Za-z0-9 \']*\\s?: *");
+	private static final Pattern VOICE_INDICATORS_PATTERN = Pattern.compile("^[\\- ]*[A-Za-z]{2}[A-Za-z0-9 \'&]*\\s?: *");
 
 	
 	public SubtitleEntry scrub(SubtitleEntry entry) {

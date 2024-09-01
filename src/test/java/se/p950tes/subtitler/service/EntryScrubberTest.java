@@ -110,6 +110,9 @@ class EntryScrubberTest {
 		newTest("non-caps voice").expectEmpty().forEntry("Chris' son:");
 		newTest("non-caps voice").expectEmpty().forEntry("Dan's son:");
 		
+		newTest("all caps voice").expectEmpty().forEntry("RIGGS & MURTAUGH:");
+		newTest("non-caps voice").expectEmpty().forEntry("Riggs & Murtaugh:");
+		
 		newTest("all caps voice").expectEmpty().forEntry("- CHRIS:");
 		newTest("non-caps voice").expectEmpty().forEntry("- Chris:");
 		newTest("all caps voice with number").expectEmpty().forEntry("- GUARD 1:");
